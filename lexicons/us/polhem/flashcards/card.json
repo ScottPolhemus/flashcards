@@ -1,0 +1,58 @@
+{
+  "lexicon": 1,
+  "id": "us.polhem.flashcards.card",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "Record representing a single flash card.",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": [
+          "front",
+          "back",
+          "deck",
+          "createdAt"
+        ],
+        "properties": {
+          "front": {
+            "type": "string",
+            "maxGraphemes": 300,
+            "maxLength": 3000,
+            "description": "Text content for front of card."
+          },
+          "frontFacets": {
+            "type": "array",
+            "items": {
+              "type": "ref",
+              "ref": "app.bsky.richtext.facet"
+            }
+          },
+          "back": {
+            "type": "string",
+            "maxGraphemes": 300,
+            "maxLength": 3000,
+            "description": "Text content for back of card."
+          },
+          "backFacets": {
+            "type": "array",
+            "items": {
+              "type": "ref",
+              "ref": "app.bsky.richtext.facet"
+            }
+          },
+          "deck": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "Reference (AT-URI) to the deck record (us.polhem.flashcards.deck)."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Client-declared timestamp when this post was originally created."
+          }
+        }
+      }
+    }
+  }
+}
