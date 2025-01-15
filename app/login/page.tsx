@@ -24,17 +24,29 @@ export default function LoginPage() {
   }
 
   return (
-    <Form onSubmit={onSubmit}>
-      <Input name="handle" label="Handle" required />
-      <Button
-        type="submit"
-        disabled={!oAuth}
-        color="primary"
-        size="lg"
-        fullWidth
-      >
-        Sign in with Bluesky
-      </Button>
-    </Form>
+    <>
+      <Form onSubmit={onSubmit}>
+        <Input
+          name="handle"
+          label="Handle"
+          placeholder="Enter your handle (e.g. alice.bsky.social)"
+          required
+        />
+        <Button
+          type="submit"
+          isDisabled={!oAuth}
+          color="primary"
+          size="lg"
+          fullWidth
+        >
+          Sign in
+        </Button>
+      </Form>
+      <p className="mx-auto mb-4">
+        Flashcards is built on AT Protocol, the decentralized social platform
+        created by Bluesky. If you have an account hosted on Bluesky or another
+        compatible server, you can use it to sign in here.
+      </p>
+    </>
   )
 }

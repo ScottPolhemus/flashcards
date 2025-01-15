@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss'
+import plugin from 'tailwindcss/plugin'
 import { nextui } from '@nextui-org/react'
 
 export default {
@@ -10,11 +11,26 @@ export default {
   ],
   theme: {
     extend: {
-      colors: {
-        background: 'var(--background)',
-        foreground: 'var(--foreground)',
-      },
+      // colors: {
+      //   background: 'var(--background)',
+      //   foreground: 'var(--foreground)',
+      // },
     },
   },
-  plugins: [nextui()],
+  plugins: [
+    nextui(),
+    plugin(function ({ addUtilities }) {
+      addUtilities({
+        '.backface-visible': {
+          'backface-visibility': 'visible',
+        },
+        '.backface-hidden': {
+          'backface-visibility': 'hidden',
+        },
+        '.transform-3d': {
+          'transform-style': 'preserve-3d',
+        },
+      })
+    }),
+  ],
 } satisfies Config
