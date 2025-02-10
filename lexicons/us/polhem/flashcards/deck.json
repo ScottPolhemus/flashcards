@@ -36,6 +36,11 @@
             "type": "string",
             "format": "datetime",
             "description": "Client-declared timestamp when this deck was originally created."
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Client-declared timestamp when this deck or one of its cards was last updated."
           }
         }
       }
