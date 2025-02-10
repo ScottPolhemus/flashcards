@@ -12,17 +12,17 @@ import { Agent, AppBskyActorDefs } from '@atproto/api'
 
 import { UsPolhemFlashcardsNS } from '@/app/__generated__/lexicons'
 import LoadingScreen from '@/components/LoadingScreen'
-import { clientMetadata } from './oauth'
+import { clientMetadata } from '../utils/oAuth'
 
 if (!process.env.NEXT_PUBLIC_APP_HOST) {
   throw new Error('Missing NEXT_PUBLIC_APP_HOST env variable')
 }
 
-export type ATProtoContextValue = {
+type ATProtoContextValue = {
   oAuth?: BrowserOAuthClient
   session?: OAuthSession
   agent?: Agent
-  profile?: AppBskyActorDefs.ProfileViewDetailed
+  accountProfile?: AppBskyActorDefs.ProfileViewDetailed
   flashcards?: UsPolhemFlashcardsNS
   loading: boolean
 }
@@ -31,8 +31,10 @@ const ATProtoContext = createContext<ATProtoContextValue | null>(null)
 
 export function ATProtoProvider({ children }: { children: ReactNode }) {
   const [oAuth, setOAuth] = useState<BrowserOAuthClient>()
+  const [session, setSession] = useState<OAuthSession>()
   const [agent, setAgent] = useState<Agent>()
-  const [profile, setProfile] = useState<AppBskyActorDefs.ProfileViewDetailed>()
+  const [accountProfile, setAccountProfile] =
+    useState<AppBskyActorDefs.ProfileViewDetailed>()
   const [flashcards, setFlashcards] = useState<UsPolhemFlashcardsNS>()
   const [loading, setLoading] = useState(true)
 
@@ -46,6 +48,8 @@ export function ATProtoProvider({ children }: { children: ReactNode }) {
       setOAuth(oAuthClient)
 
       if (!!result && 'session' in result) {
+        setSession(result.session)
+
         const atProtoAgent = new Agent(result.session)
         setAgent(atProtoAgent)
         setFlashcards(new UsPolhemFlashcardsNS(atProtoAgent))
@@ -53,7 +57,7 @@ export function ATProtoProvider({ children }: { children: ReactNode }) {
         atProtoAgent
           .getProfile({ actor: result.session.sub })
           .then((response) => {
-            setProfile(response.data)
+            setAccountProfile(response.data)
             setLoading(false)
           })
       } else {
@@ -69,9 +73,10 @@ export function ATProtoProvider({ children }: { children: ReactNode }) {
     <ATProtoContext.Provider
       value={{
         oAuth,
+        session,
         agent,
         flashcards,
-        profile,
+        accountProfile,
         loading,
       }}
     >
@@ -81,11 +86,11 @@ export function ATProtoProvider({ children }: { children: ReactNode }) {
 }
 
 export function useATProto() {
-  const atproto = useContext(ATProtoContext)
+  const atProto = useContext(ATProtoContext)
 
-  if (!atproto) {
+  if (!atProto) {
     throw new Error('Missing ATProtoContext')
   }
 
-  return atproto
+  return atProto
 }

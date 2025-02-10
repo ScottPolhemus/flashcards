@@ -1,11 +1,12 @@
 import type { Metadata } from 'next'
-import { NextUIProvider } from '@nextui-org/react'
+import { HeroUIProvider } from '@heroui/react'
 
 import { ATProtoProvider } from '@/services/atproto'
 import './globals.css'
 
 export const metadata: Metadata = {
   title: 'Flashcards',
+  description: 'A simple flashcard studying tool based on AT Protocol.',
 }
 
 export default function RootLayout({
@@ -15,10 +16,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="overflow-hidden">
-        <NextUIProvider>
+      <body>
+        <HeroUIProvider>
           <ATProtoProvider>{children}</ATProtoProvider>
-        </NextUIProvider>
+        </HeroUIProvider>
       </body>
     </html>
   )

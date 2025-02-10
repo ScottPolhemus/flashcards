@@ -1,11 +1,13 @@
 'use client'
 
-import { Form, Input, Button } from '@nextui-org/react'
+import { Form, Input, Button } from '@heroui/react'
 
 import { useATProto } from '@/services/atproto'
+import { useState } from 'react'
 
 export default function LoginPage() {
   const { oAuth } = useATProto()
+  const [submitting, setSubmitting] = useState(false)
 
   const onSubmit: Parameters<typeof Form>[0]['onSubmit'] = (event) => {
     event.preventDefault()
@@ -21,32 +23,37 @@ export default function LoginPage() {
     }
 
     oAuth.signIn(handle.toString())
+    setSubmitting(true)
   }
 
   return (
-    <>
-      <Form onSubmit={onSubmit}>
+    <div className="p-4">
+      <Form
+        onSubmit={onSubmit}
+        validationBehavior="native"
+        className="mx-auto flex max-w-xl flex-col gap-4"
+      >
         <Input
           name="handle"
           label="Handle"
           placeholder="Enter your handle (e.g. alice.bsky.social)"
-          required
+          isRequired
         />
         <Button
           type="submit"
-          isDisabled={!oAuth}
+          isDisabled={!oAuth || submitting}
           color="primary"
           size="lg"
           fullWidth
         >
-          Sign in
+          {submitting ? 'Please wait...' : 'Sign in'}
         </Button>
+        <p>
+          Flashcards is built on AT Protocol, the decentralized social platform
+          created by Bluesky. If you have an account hosted on Bluesky or
+          another compatible server, you can use it to sign in here.
+        </p>
       </Form>
-      <p className="mx-auto mb-4">
-        Flashcards is built on AT Protocol, the decentralized social platform
-        created by Bluesky. If you have an account hosted on Bluesky or another
-        compatible server, you can use it to sign in here.
-      </p>
-    </>
+    </div>
   )
 }

@@ -39,11 +39,11 @@ export default function DecksList({ repo }: { repo: string }) {
   return (
     <>
       {decks.map((deck) => {
-        const { rkey, authorDid } = parseAtProtoUri(deck.uri)
+        const { rkey } = parseAtProtoUri(deck.uri)
 
         return (
           <p key={deck.uri}>
-            <Link href={`/deck?repo=${authorDid}&rkey=${rkey}`}>
+            <Link href={`/deck?repo=${repo}&rkey=${rkey}`}>
               {deck.value.name}
             </Link>
           </p>

@@ -1,4 +1,4 @@
-import { clientMetadata } from '@/services/oauth'
+import { clientMetadata } from '@/utils/oAuth'
 
 export const dynamic = 'force-static'
 

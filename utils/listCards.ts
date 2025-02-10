@@ -24,9 +24,7 @@ export default async function listCards({
     }
   } while (response.records.length > 0)
 
-  return results
-    .map(({ value }) => value)
-    .filter((card) => {
-      return card.deck === deckUri
-    })
+  return results.filter((card) => {
+    return card.value.deck === deckUri
+  })
 }

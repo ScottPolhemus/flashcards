@@ -1,17 +1,13 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
+import { Button } from '@heroui/react'
 
-import {
-  UsPolhemFlashcardsCard,
-  UsPolhemFlashcardsDeck,
-} from '@/app/__generated__/lexicons'
-import { useATProto } from '@/services/atproto'
 import DeckDetails from '@/components/DeckDetails'
-import LoadingScreen from '@/components/LoadingScreen'
-import listCards from '@/utils/listCards'
 import DeckPractice from '@/components/DeckPractice'
+import LoadingScreen from '@/components/LoadingScreen'
+import useDeck from '@/hooks/useDeck'
 
 export default function DeckPage() {
   const searchParams = useSearchParams()
@@ -22,33 +18,14 @@ export default function DeckPage() {
     throw new Error('Invalid query params')
   }
 
-  const { flashcards } = useATProto()
-  const [deck, setDeck] = useState<UsPolhemFlashcardsDeck.Record>()
-  const [cards, setCards] = useState<UsPolhemFlashcardsCard.Record[]>([])
-  const [loading, setLoading] = useState(true)
+  const { deck, cards, loading } = useDeck({ repo, rkey })
   const [practicing, setPracticing] = useState(false)
 
-  if (!flashcards) {
-    throw new Error('Flashcards client not initialized')
-  }
+  const onPressPractice = useCallback(() => {
+    setPracticing(true)
+  }, [])
 
-  useEffect(() => {
-    flashcards.deck
-      .get({
-        repo,
-        rkey,
-      })
-      .then((response) => {
-        setDeck(response.value)
-
-        listCards({ flashcards, repo, deckUri: response.uri }).then((cards) => {
-          setCards(cards)
-          setLoading(false)
-        })
-      })
-  }, [flashcards, repo, rkey])
-
-  if (loading || !deck) {
+  if (loading || !deck || !cards) {
     return <LoadingScreen />
   }
 
@@ -59,7 +36,7 @@ export default function DeckPage() {
   return (
     <>
       <DeckDetails deck={deck} cards={cards} />
-      <button onClick={() => setPracticing(true)}>Practice!</button>
+      <Button onPress={onPressPractice}>Practice!</Button>
     </>
   )
 }

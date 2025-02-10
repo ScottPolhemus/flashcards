@@ -3,28 +3,37 @@
 import Link from 'next/link'
 
 import { useATProto } from '@/services/atproto'
-import DecksList from '@/components/DecksList'
+import AppNav from '@/components/AppNav'
+import SplashScreen from '@/components/SplashScreen'
 
 export default function Home() {
-  const { profile } = useATProto()
+  const { accountProfile } = useATProto()
+
+  if (!accountProfile) {
+    return <SplashScreen />
+  }
 
   return (
-    <div>
-      <h1>Flashcards</h1>
-      <h2>A simple study tool created by Scott Polhemus</h2>
-      {!!profile ? (
-        <>
-          <p>
-            <Link href="/login">Create a deck</Link>
-          </p>
-          <h3>Your Decks</h3>
-          <DecksList repo={profile.did} />
-        </>
-      ) : (
-        <p>
-          <Link href="/login">Sign in</Link> to start creating your own decks!
-        </p>
-      )}
-    </div>
+    <>
+      <AppNav />
+      <div className="flex h-screen flex-col px-4">
+        <h1 className="text-xl">Welcome, {accountProfile.displayName}!</h1>
+        <p className="mb-4 text-sm underline">Log out</p>
+        <div className="flex gap-4">
+          <Link
+            href="/deck/new"
+            className="flex-1 rounded-md bg-gray-500 p-4 text-center text-white"
+          >
+            Create a new deck
+          </Link>
+          <Link
+            href={`/profile?actor=${accountProfile.handle}`}
+            className="flex-1 rounded-md bg-gray-500 p-4 text-center text-white"
+          >
+            Browse your decks
+          </Link>
+        </div>
+      </div>
+    </>
   )
 }

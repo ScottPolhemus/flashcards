@@ -1,17 +1,17 @@
 export function parseAtProtoUri(uri: string) {
-  const [authorDid, collection, rkey] = uri.replace('at://', '').split('/')
+  const [repo, collection, rkey] = uri.replace('at://', '').split('/')
 
-  return { authorDid, collection, rkey }
+  return { repo, collection, rkey }
 }
 
 export function formatAtProtoUri({
-  authorDid,
+  repo,
   collection,
   rkey,
 }: {
-  authorDid: string
+  repo: string
   collection: string
   rkey: string
 }) {
-  return `at://${authorDid}/${collection}/${rkey}`
+  return `at://${repo}/${collection}/${rkey}`
 }
